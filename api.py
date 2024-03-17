@@ -1,5 +1,6 @@
 import google.generativeai as palm
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 palm.configure(api_key="AIzaSyDle7O_DyAArPcSjFP-jH9a-Q4yJNnq8Qk")
 models = [
