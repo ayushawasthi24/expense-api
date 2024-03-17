@@ -23,12 +23,20 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+class Item(BaseModel):
+    item: str
+
+
 @app.post("/api/categorize")
-def categorize_item(item):
-    category = palm.generate_text(
-        model=model,
-        prompt=f"Categorize {item} in one of the categories. The list of categories is as follows: Food, Grocery, Medical, Education, Entertainment, Rent, Sports/Fitness. Give result as just the name of the category.",
-        temperature=0,
-        max_output_tokens=800,
-    )
-    return {'category': category.result}
+def categorize_item(item: Item):
+    try:
+        category = palm.generate_text(
+            model=model,
+            prompt=f"Categorize {item.item} in one of the categories. The list of categories is as follows: Food, Grocery, Medical, Education, Entertainment, Rent, Sports/Fitness. Give result as just the name of the category.",
+            temperature=0,
+            max_output_tokens=800,
+        )
+        return {'category': category.result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
